@@ -58,13 +58,13 @@
 
 <p align="center">
   🌐 <b>Deployed on AWS EC2</b><br/><br/>
-  👉 <a href="http://18.60.212.35:8501/" target="_blank">
+  👉 <a href="http://16.112.64.206:8501/" target="_blank">
   <img src="https://img.shields.io/badge/🚀_Try_Live_Demo-10B981?style=for-the-badge&logo=rocket" />
   </a>
 </p>
 
 <p align="center">
-  <i>Live at: <code>http://18.60.212.35:8501/</code></i>
+  <i>Live at: <code>http://16.112.64.206:8501/</code></i>
 </p>
 
 <hr/>
@@ -309,8 +309,8 @@ python3 --version
 <h3>📥 Step 5: Clone Project</h3>
 
 ```bash
-git clone https://github.com/Krishnakant73/Real-Time-Production-Chatbot-Gemini-API.git
-cd Real-Time-Production-Chatbot-Gemini-API
+git clone https://github.com/Krishnakant73/Samvaad-GPT.git
+cd Samvaad-GPT
 ```
 
 <h3>🧪 Step 6: Setup Virtual Environment</h3>
@@ -361,7 +361,7 @@ http://<EC2-PUBLIC-IP>:8501
 Example:
 
 ```
-http://18.60.212.35:8501
+http://16.112.64.206:8501/
 ```
 
 <h3>🔄 Optional: Auto Start on Reboot (Production Mode)</h3>
@@ -382,10 +382,10 @@ After=network.target
 [Service]
 Type=simple
 User=ec2-user
-WorkingDirectory=/home/ec2-user/Real-Time-Production-Chatbot-Gemini-API
-ExecStart=/home/ec2-user/Real-Time-Production-Chatbot-Gemini-API/venv/bin/streamlit run app/ui/app.py --server.port 8501 --server.address 0.0.0.0
+WorkingDirectory=/home/ec2-user/Samvaad-GPT
+EnvironmentFile=/home/ec2-user/Samvaad-GPT/.env
+ExecStart=/home/ec2-user/Samvaad-GPT/venv/bin/streamlit run app/ui/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
 Restart=always
-
 [Install]
 WantedBy=multi-user.target
 ```
