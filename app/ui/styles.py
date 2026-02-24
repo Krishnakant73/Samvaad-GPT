@@ -247,14 +247,23 @@ def apply_global_styles() -> None:
         ::-webkit-scrollbar-thumb {
             background: rgba(255,255,255,0.18);
             border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            color: #10B981;
+            font-weight: 500;
+            animation: pulse 2s infinite;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.26);
+        .realtime-dot {
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+            box-shadow: 0 0 8px #10B981;
         }
-        
-        /*  HIDE BRANDING  */
-        .stDeployButton {
-            display: none;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         </style>
         """,
@@ -298,8 +307,32 @@ def chatgpt_input_placeholder():
         </p>
         <p style="color: #6B7280; font-size: 0.75rem; margin-top: 1rem;">
         Powered by GNews API, NewsAPI, and Gemini API<br>
-        Best for 1-day old news. Recent breaking news (5min-4hrs) may have fetch delays.
+        Latest News (5 min - 6 Hours)
         </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def realtime_news_indicator():
+    """Display a real-time news fetching indicator."""
+    st.markdown("""
+    <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+        <div class="realtime-news-indicator">
+            <span class="dot"></span>
+            <span class="live-text">⚡ Live News • Fetched from Last 6 Hours</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def realtime_news_indicator():
+    """Display a real-time news fetching indicator."""
+    st.markdown("""
+    <div style="display: flex; justify-content: center; margin: 10px 0;">
+        <div class="realtime-indicator">
+            <span class="realtime-dot"></span>
+            <span>● Live News Fetched (Last 6 Hours)</span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 

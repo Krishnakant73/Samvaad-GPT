@@ -29,7 +29,7 @@ def get_settings() -> Settings:
     # Reload .env each call to pick up key changes without restarting
     load_dotenv(override=True)
     return Settings(
-        gemini_api_key=os.getenv("GEMINI_API_KEY", "").strip(),
+        gemini_api_key=os.getenv("GOOGLE_API_KEY", "").strip(),
         gnews_api_key=os.getenv("GNEWS_API_KEY", "").strip(),
         newsapi_key=os.getenv("NEWSAPI_KEY", "").strip(),
         newsdata_api_key=os.getenv("NEWSDATA_API_KEY", "").strip(),

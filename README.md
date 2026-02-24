@@ -58,13 +58,13 @@
 
 <p align="center">
   🌐 <b>Deployed on AWS EC2</b><br/><br/>
-  👉 <a href="http://YOUR-EC2-IP:8501" target="_blank">
+  👉 <a href="http://18.60.212.35:8501/" target="_blank">
   <img src="https://img.shields.io/badge/🚀_Try_Live_Demo-10B981?style=for-the-badge&logo=rocket" />
   </a>
 </p>
 
 <p align="center">
-  <i>Replace <code>YOUR-EC2-IP</code> with your actual EC2 public IP address after deployment</i>
+  <i>Live at: <code>http://18.60.212.35:8501/</code></i>
 </p>
 
 <hr/>
@@ -231,8 +231,8 @@ pip install -r requirements.txt
 Create `.env` file in root directory:
 
 ```env
-# Required: Gemini API Key (Get from https://makersuite.google.com/app/apikey)
-GEMINI_API_KEY=your_gemini_api_key_here
+# Required: Google API Key (Get from https://makersuite.google.com/app/apikey)
+GOOGLE_API_KEY=your_gemini_api_key_here
 
 # Required: News APIs (Get free tier from these services)
 GNEWS_API_KEY=your_gnews_api_key_here
@@ -260,109 +260,130 @@ Visit: `http://localhost:8501`
 
 <hr/>
 
-<h2 align="center">☁️ AWS EC2 Deployment Guide</h2>
+<h2 align="center">☁️ AWS EC2 Deployment (Amazon Linux 2023)</h2>
 
-### Step 1: Launch EC2 Instance
+<h3>🖥 Step 1: Launch EC2 Instance</h3>
 
-1. **AWS Console** → EC2 → Launch Instance
-2. **AMI:** Ubuntu Server 22.04 LTS (HVM)
-3. **Instance Type:** t2.micro (free tier) or t2.small
-4. **Security Group:** Add rules:
-   - SSH (Port 22) - Your IP
-   - Custom TCP (Port 8501) - Anywhere (0.0.0.0/0)
-5. **Key Pair:** Create/download .pem file
+1. Go to <b>AWS Console → EC2 → Launch Instance</b>  
+2. Configure:
 
-### Step 2: Connect to Instance
+| Setting | Value |
+|----------|--------|
+| AMI | Amazon Linux 2023 |
+| Instance Type | t2.micro (Free Tier) |
+| Key Pair | Create new (.pem) |
+| Storage | 8GB+ |
+
+<h3>🔐 Step 2: Configure Security Group (VERY IMPORTANT)</h3>
+
+Add these Inbound Rules:
+
+| Type | Port | Source |
+|------|------|--------|
+| SSH | 22 | Your IP |
+| Custom TCP | 8501 | 0.0.0.0/0 |
+
+⚠️ Without opening port 8501, the app will NOT be accessible.
+
+---
+
+<h3>🔌 Step 3: Connect to EC2</h3>
 
 ```bash
-# Windows (PowerShell)
-ssh -i "your-key.pem" ubuntu@<EC2-PUBLIC-IP>
-
-# Linux/Mac
 chmod 400 your-key.pem
-ssh -i "your-key.pem" ubuntu@<EC2-PUBLIC-IP>
+ssh -i "your-key.pem" ec2-user@<EC2-PUBLIC-IP>
 ```
 
-### Step 3: Install Dependencies on EC2
+<h3>📦 Step 4: Install Dependencies (Amazon Linux)</h3>
 
 ```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
+sudo yum update -y
 
-# Install Python
-sudo apt install python3 python3-pip python3-venv -y
+sudo yum install python3 -y
+sudo yum install python3-pip -y
+sudo yum install git -y
 
-# Install Git
-sudo apt install git -y
+python3 --version
+```
 
-# Clone repository
-git clone <your-repo-url>
-cd samvaad-gpt
+<h3>📥 Step 5: Clone Project</h3>
 
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+```bash
+git clone https://github.com/Krishnakant73/Real-Time-Production-Chatbot-Gemini-API.git
+cd Real-Time-Production-Chatbot-Gemini-API
+```
 
-# Install requirements
+<h3>🧪 Step 6: Setup Virtual Environment</h3>
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Step 4: Configure Environment
+<h3>🔐 Step 7: Configure Environment Variables</h3>
 
 ```bash
-# Create .env file
 nano .env
+```
 
-# Paste your API keys (Ctrl+O, Enter, Ctrl+X to save)
-GEMINI_API_KEY=your_key
+Paste:
+
+```env
+GOOGLE_API_KEY=your_key
 GNEWS_API_KEY=your_key
 NEWSAPI_KEY=your_key
 ```
 
-### Step 5: Run with Background Process
+Save:
+CTRL + O → Enter → CTRL + X
+
+<h3>🚀 Step 8: Run in Background (Recommended Method)</h3>
 
 ```bash
-# Install screen for background process
-sudo apt install screen -y
-
-# Create new screen session
-screen -S samvaad
-
-# Run the app
-streamlit run app/ui/app.py --server.port 8501 --server.address 0.0.0.0
-
-# Detach: Press Ctrl+A, then D
-
-# To reattach later:
-screen -r samvaad
+nohup streamlit run app/ui/app.py --server.port 8501 --server.address 0.0.0.0 > output.log 2>&1 &
 ```
 
-### Step 6: Access Public URL
+Check running:
+
+```bash
+ps aux | grep streamlit
+```
+
+<h3>🌐 Step 9: Access Application</h3>
+
+Open browser:
 
 ```
 http://<EC2-PUBLIC-IP>:8501
 ```
 
-### Optional: Auto-start on Boot
+Example:
 
-Create systemd service:
+```
+http://18.60.212.35:8501
+```
+
+<h3>🔄 Optional: Auto Start on Reboot (Production Mode)</h3>
+
+Create service:
 
 ```bash
-sudo nano /etc/systemd/system/samvaad.service
+sudo nano /etc/systemd/system/newsapp.service
 ```
 
 Paste:
 
 ```ini
 [Unit]
-Description=Samvaad GPT News Chatbot
+Description=News Chatbot Streamlit App
 After=network.target
 
 [Service]
 Type=simple
-User=ubuntu
-WorkingDirectory=/home/ubuntu/samvaad-gpt
-ExecStart=/home/ubuntu/samvaad-gpt/.venv/bin/streamlit run app/ui/app.py --server.port 8501 --server.address 0.0.0.0
+User=ec2-user
+WorkingDirectory=/home/ec2-user/Real-Time-Production-Chatbot-Gemini-API
+ExecStart=/home/ec2-user/Real-Time-Production-Chatbot-Gemini-API/venv/bin/streamlit run app/ui/app.py --server.port 8501 --server.address 0.0.0.0
 Restart=always
 
 [Install]
@@ -372,10 +393,17 @@ WantedBy=multi-user.target
 Enable:
 
 ```bash
-sudo systemctl enable samvaad
-sudo systemctl start samvaad
-sudo systemctl status samvaad
+sudo systemctl daemon-reload
+sudo systemctl enable newsapp
+sudo systemctl start newsapp
+sudo systemctl status newsapp
 ```
+
+Now your app:
+
+✔ Runs in background
+✔ Restarts automatically
+✔ Production ready
 
 <hr/>
 
@@ -450,18 +478,6 @@ samvaad-gpt/
 
 <hr/>
 
-<h2 align="center">🚀 Production Checklist</h2>
-
-- [ ] All API keys configured in `.env`
-- [ ] `.env` added to `.gitignore`
-- [ ] Security group configured (port 8501 open)
-- [ ] Background process running (screen or systemd)
-- [ ] Auto-restart enabled
-- [ ] Logs monitored
-- [ ] Rate limits tracked
-
-<hr/>
-
 <h2 align="center">🐛 Troubleshooting</h2>
 
 ### Common Issues
@@ -483,26 +499,6 @@ pip install -r requirements.txt
 **Messages Disappearing**
 - Enable SQLite persistence: `USE_SQLITE=true`
 - Check session state initialization
-
-<hr/>
-
-<h2 align="center">📄 License</h2>
-
-<p align="center">
-  MIT License - See <a href="LICENSE">LICENSE</a> file for details
-</p>
-
-<hr/>
-
-<h2 align="center">🤝 Contributing</h2>
-
-<p align="center">
-  1. Fork the repository<br>
-  2. Create feature branch<br>
-  3. Implement changes<br>
-  4. Test thoroughly<br>
-  5. Submit pull request
-</p>
 
 <hr/>
 

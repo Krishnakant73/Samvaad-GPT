@@ -5,7 +5,10 @@ import time
 from datetime import datetime
 import os
 import sys
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from app.config.settings import get_settings
@@ -21,7 +24,7 @@ from app.memory.sqlite_store import (
 from app.prompts.prompt import SimplePromptBuilder
 from app.services.gemini_client import GeminiClient, GeminiGenerationConfig
 from app.services.response_streamer import stream_words
-from app.ui.styles import apply_global_styles, chatgpt_header, chatgpt_input_placeholder
+from app.ui.styles import apply_global_styles, chatgpt_header, chatgpt_input_placeholder, realtime_news_indicator
 from app.utils.helpers import format_articles_for_display
 from app.services.news_engine import AdvancedNewsEngine
 
@@ -154,6 +157,9 @@ def main() -> None:
 
     # ChatGPT-style header
     chatgpt_header()
+    
+    # Real-time news indicator
+    realtime_news_indicator()
     
     with st.sidebar:
         st.markdown("### 💬 Chats")
