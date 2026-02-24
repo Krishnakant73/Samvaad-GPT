@@ -9,7 +9,7 @@ import os
 
 
 def init_session_state() -> None:
-    """Initialize all session state variables to prevent data loss."""
+    """Initializing all session state variables to prevent data loss."""
     # Messages for current conversation
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -26,7 +26,7 @@ def init_session_state() -> None:
     if "current_articles" not in st.session_state:
         st.session_state.current_articles = []
     
-    # Conversation storage - dictionary format with chat_id keys
+    # Conversation storage dictionary format with chatid keys
     if "conversations" not in st.session_state:
         st.session_state.conversations = {}
     
@@ -46,7 +46,7 @@ def init_session_state() -> None:
     if "timestamp" not in st.session_state:
         st.session_state.timestamp = time.time()
     
-    # API configuration (persist user preferences)
+    # API configuration
     if "selected_model" not in st.session_state:
         st.session_state.selected_model = "gemini-2.0-flash"
     if "selected_temperature" not in st.session_state:

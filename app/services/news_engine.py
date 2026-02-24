@@ -19,7 +19,7 @@ class AdvancedNewsEngine:
         self.gnews_url = "https://gnews.io/api/v4/search"
         self.newsapi_url = "https://newsapi.org/v2/everything"
 
-        # Cache: 100 queries, expires in 15 minutes
+        # Caches: 100 queries, expires in 15 minutes
         self.cache = TTLCache(maxsize=100, ttl=900)
 
         self.rate_tracker = {
@@ -27,9 +27,9 @@ class AdvancedNewsEngine:
             "newsapi_calls": 0
         }
 
-    # =========================================
+    
     # MAIN PUBLIC METHOD
-    # =========================================
+    
 
     def fetch_news(
         self,
@@ -88,18 +88,18 @@ class AdvancedNewsEngine:
         logger.warning(f"No articles found for query: {query}")
         return []
 
-    # =========================================
-    # SMART QUERY ENHANCER
-    # =========================================
+    
+    # SMART QUERY ENHANCERS
+   
 
     def _enhance_query(self, query: str, breaking: bool) -> str:
         if breaking:
             return f"{query} breaking news latest updates"
         return f"{query} latest news"
 
-    # =========================================
+   
     # DATE FILTER
-    # =========================================
+   
 
     def _get_date_filter(self, breaking: bool) -> str:
         """Get date filter optimized for news freshness."""
@@ -109,9 +109,9 @@ class AdvancedNewsEngine:
         # For regular news: last 24 hours
         return (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-    # =========================================
-    # RETRY LOGIC
-    # =========================================
+   
+    # RETRY LOGICS
+   
 
     def _retry_fetch(self, func, retries=2):
         for attempt in range(retries):
@@ -127,9 +127,9 @@ class AdvancedNewsEngine:
                     time.sleep(1)
         return []
 
-    # =========================================
+    
     # GNEWS FETCH
-    # =========================================
+    
 
     def _fetch_gnews(self, query, country, from_date, limit):
         settings = get_settings()
@@ -163,9 +163,9 @@ class AdvancedNewsEngine:
             logger.error(f"GNews fetch error: {e}")
             return []
 
-    # =========================================
-    # NEWSAPI FETCH
-    # =========================================
+    
+    # NEWSAPI.IO FETCH
+    
 
     def _fetch_newsapi(self, query, country, from_date, limit):
         settings = get_settings()
@@ -199,9 +199,9 @@ class AdvancedNewsEngine:
             logger.error(f"NewsAPI fetch error: {e}")
             return []
 
-    # =========================================
+    
     # FORMATTER
-    # =========================================
+    
 
     def _format_articles(self, articles):
         """Format articles with complete source information for display."""

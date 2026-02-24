@@ -19,10 +19,7 @@ class PromptBuilder:
         self.max_articles = max_articles
         self.summarize_after = summarize_after
 
-    # ===============================
-    # PUBLIC METHOD
-    # ===============================
-
+   
     def build(
         self,
         history: List[Dict[str, str]],
@@ -38,9 +35,9 @@ class PromptBuilder:
         return f"""
 You are NewsGPT — a professional real-time news intelligence assistant.
 
-========================
+
 CORE RULES (STRICT)
-========================
+
 1. Use ONLY the provided articles as factual evidence.
 2. Never use prior knowledge.
 3. Never speculate or infer beyond text.
@@ -49,9 +46,9 @@ CORE RULES (STRICT)
 5. Maintain neutral, journalistic tone.
 6. Return a single valid JSON object only. No code blocks or extra text.
 
-========================
+
 ADVANCED ANALYSIS TASKS
-========================
+
 Step 1: Intent Detection
 - Determine whether this is:
   • Follow-up on same event
@@ -74,9 +71,9 @@ Step 5: Risk Check
 - Avoid assumptions.
 - Avoid predictive claims unless explicitly mentioned.
 
-========================
+
 OUTPUT STRUCTURE
-========================
+
 
 Return exactly one JSON object with the following fields:
 - intent: one of "follow_up", "clarification", "new_topic", "comparative"
@@ -87,9 +84,9 @@ Return exactly one JSON object with the following fields:
   neutral tone and ground statements in the provided articles.
 - confidence: "High" | "Medium" | "Low" based on article completeness
 
-========================
+
 CONTEXT
-========================
+
 
 Conversation History:
 {formatted_history}
@@ -101,9 +98,9 @@ User Question:
 {user_query}
 """.strip()
 
-    # ===============================
+   
     # HISTORY FORMATTER
-    # ===============================
+   
 
     def _compress_history_if_needed(self, history: List[Dict[str, str]]) -> List[Dict[str, str]]:
         if not history:
@@ -185,10 +182,8 @@ Return only the summary text.
 
         return "\n".join(formatted)
 
-    # ===============================
-    # ARTICLE RANKING (Relevance Boost)
-    # ===============================
-
+    
+# ARTICLE RANKING (Relevance Boost)
     def _rank_articles(
         self,
         articles: List[Dict[str, Any]],
@@ -214,9 +209,9 @@ Return only the summary text.
 
         return ranked[:self.max_articles]
 
-    # ===============================
-    # ARTICLE FORMATTER
-    # ===============================
+    
+    # ARTICLE FORMATTERs
+    
 
     def _format_news(self, articles: List[Dict[str, Any]]) -> str:
         if not articles:
@@ -240,9 +235,9 @@ Link: {article.get("link")}
 
         return "\n".join(formatted_blocks).strip()
 
-    # ===============================
-    # SAFE RESPONSE PARSER
-    # ===============================
+    
+    # SAFE RESPONSE PARSE
+    
 
     def parse_response(self, llm_response: str) -> Dict[str, Any]:
 
