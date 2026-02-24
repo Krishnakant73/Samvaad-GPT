@@ -33,7 +33,7 @@ def get_settings() -> Settings:
         gnews_api_key=os.getenv("GNEWS_API_KEY", "").strip(),
         newsapi_key=os.getenv("NEWSAPI_KEY", "").strip(),
         newsdata_api_key=os.getenv("NEWSDATA_API_KEY", "").strip(),
-        gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip(),
+        gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash-lite").strip(),
         max_output_tokens=int(os.getenv("MAX_OUTPUT_TOKENS", "1500")),
         stream_delay_seconds=float(os.getenv("STREAM_DELAY_SECONDS", "0.02")),
         context_message_limit=int(os.getenv("CONTEXT_MESSAGE_LIMIT", "5")),

@@ -196,7 +196,7 @@ def main() -> None:
         # Settings
         st.markdown("### ⚙️ Settings")
         
-        model_options = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"]
+        model_options = ["gemini-2.0-flash-lite", "gemini-2.0-flash-exp", "gemini-1.5-flash"]
         selected_model = st.selectbox("Model", model_options, index=0)
         st.session_state.selected_model = selected_model
         

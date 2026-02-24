@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
+import os
+from dotenv import load_dotenv
 
 import google.generativeai as genai
 
 from app.utils.logger import get_logger
 
+load_dotenv()
 
 logger = get_logger(__name__)
 
@@ -28,10 +31,14 @@ class GeminiClient:
 
     def generate(self, *, prompt: str) -> str:
         if not self._api_key:
-            logger.warning("GEMINI_API_KEY is missing; returning fallback response")
-            return "Gemini API key is not configured. Please set GEMINI_API_KEY in your .env file."
+            logger.warning("GOOGLE_API_KEY is missing; returning fallback response")
+            return "Gemini API key is not configured. Please set GOOGLE_API_KEY in your .env file."
+        
+        # Debug: Log API key status (masked for security)
+        logger.info(f"API Key present: {bool(self._api_key)}, Length: {len(self._api_key) if self._api_key else 0}")
+        logger.info(f"Attempting model: {self._config.model_name}")
 
-        candidates_models = [self._config.model_name, "gemini-1.5-flash"]
+        candidates_models = [self._config.model_name, "gemini-2.0-flash-lite", "gemini-2.0-flash-exp"]
         last_error_msg = ""
         for model_name in candidates_models:
             max_retries = 3
@@ -60,6 +67,10 @@ class GeminiClient:
                     error_msg = str(e)
                     last_error_msg = error_msg
                     lower = error_msg.lower()
+                    
+                    # Log the exact error for debugging
+                    logger.error(f"Error details: {error_msg}")
+                    
                     if "timeout" in lower or "failed to connect" in lower or "503" in error_msg:
                         if attempt < max_retries - 1:
                             wait_time = 2 ** attempt
